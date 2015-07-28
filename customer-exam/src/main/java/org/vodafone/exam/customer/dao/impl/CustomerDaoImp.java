@@ -38,12 +38,13 @@ public class CustomerDaoImp implements CustomerDao {
 	 * create customer
 	 */
 	@Override
-	public void creatrCustomer(final CustomerModel customer) {
+	public long createCustomer(CustomerModel customer) {
 		Session session = getSessionFactory().openSession();
 		session.beginTransaction();
 		session.save(customer);
 		session.getTransaction().commit();
 		session.close();
+		return customer.getId();
 	}
 
 	/**
@@ -51,12 +52,13 @@ public class CustomerDaoImp implements CustomerDao {
 	 */
 
 	@Override
-	public void updateCustomer(final CustomerModel customer) {
+	public boolean updateCustomer(final CustomerModel customer) {
 		Session session = getSessionFactory().openSession();
 		session.beginTransaction();
 		session.update(customer);
 		session.getTransaction().commit();
 		session.close();
+		return true;
 	}
 
 	/**
@@ -64,12 +66,12 @@ public class CustomerDaoImp implements CustomerDao {
 	 */
 
 	@Override
-	public void deleteCustomer(final long customerId) {
+	public boolean deleteCustomer(final long customerId) {
 		Session session = getSessionFactory().openSession();
 		session.beginTransaction();
 		try {
-			Query query = session.createQuery(
-					"from CustomerModel where id = ?");
+			Query query = session
+					.createQuery("from CustomerModel where id = ?");
 			query.setLong(0, customerId);
 			List<CustomerModel> targetCustomets = query.list();
 			if (targetCustomets != null && !targetCustomets.isEmpty())
@@ -81,6 +83,7 @@ public class CustomerDaoImp implements CustomerDao {
 			session.getTransaction().commit();
 			session.close();
 		}
+		return true;
 	}
 
 	/**
@@ -91,10 +94,9 @@ public class CustomerDaoImp implements CustomerDao {
 	public List<CustomerModel> findAllCustomer() {
 		Session session = getSessionFactory().openSession();
 		session.beginTransaction();
-		Query query =session.createQuery(
-				"from CustomerModel");
+		Query query = session.createQuery("from CustomerModel");
 		List<CustomerModel> targetCustomets = query.list();
-		
+
 		session.getTransaction().commit();
 		session.close();
 		return targetCustomets;

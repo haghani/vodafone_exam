@@ -37,24 +37,25 @@ public class CustomerServiceImp implements CustomerService, Serializable {
 	 * create customer
 	 */
 	@Override
-	public void creatrCustomer(final CustomerModel customer) {
-		customerDao.creatrCustomer(customer);
+	public long createCustomer(CustomerModel customer) {
+		customerDao.createCustomer(customer);
+		return customer.getId();
 	}
 	
 	/**
 	 * updatec customer
 	 */
 	@Override
-	public void updateCustomer(final CustomerModel customer) {
-		customerDao.updateCustomer(customer);
+	public boolean updateCustomer(final CustomerModel customer) {
+		return customerDao.updateCustomer(customer);
 	}
 
 	/**
 	 * delete customer
 	 */
 	@Override
-	public void deleteCustomer(final long customerId) {
-		customerDao.deleteCustomer(customerId);
+	public boolean deleteCustomer(final long customerId) {
+		return customerDao.deleteCustomer(customerId);
 
 	}
 

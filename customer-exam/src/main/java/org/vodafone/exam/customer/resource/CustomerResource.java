@@ -3,7 +3,6 @@ package org.vodafone.exam.customer.resource;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import javax.transaction.Status;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -13,6 +12,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.container.TimeoutHandler;
@@ -26,6 +26,8 @@ import org.vodafone.exam.customer.model.CustomerModel;
 import org.vodafone.exam.customer.service.CustomerService;
 import org.vodafone.exam.customer.service.impl.CustomerServiceImp;
 
+import com.google.gson.Gson;
+
 /**
  * This is the main resource of project.
  *
@@ -37,13 +39,23 @@ import org.vodafone.exam.customer.service.impl.CustomerServiceImp;
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/customers")
 public class CustomerResource {
+	/**
+	 * 
+	 */
 	private CustomerService customerService;
 
+	/**
+	 * constructor
+	 */
 	public CustomerResource() {
 		this(new CustomerServiceImp());
 	}
 
-	public CustomerResource(CustomerService customerService) {
+	/**
+	 * 
+	 * @param customerService
+	 */
+	public CustomerResource(final CustomerService customerService) {
 		this.customerService = customerService;
 	}
 
@@ -54,7 +66,7 @@ public class CustomerResource {
 	 * @param customerService
 	 *            CustomerService class.
 	 */
-	public void setCustomerService(CustomerService customerService) {
+	public void setCustomerService(final CustomerService customerService) {
 		this.customerService = customerService;
 	}
 
@@ -76,9 +88,8 @@ public class CustomerResource {
 
 		handleTimeout(asyncResponse, 20, "Getting customer operation time out!");
 
-		customerService.creatrCustomer(customer);
+		customerService.createCustomer(customer);
 		asyncResponse.resume(customer);
-
 	}
 
 	/**
@@ -98,7 +109,7 @@ public class CustomerResource {
 	@GET
 	@ManagedAsync
 	public void getCustomers(@Suspended final AsyncResponse asyncResponse,
-			@BeanParam CustomerParameterBean customerParamBean) {
+			@BeanParam final CustomerParameterBean customerParamBean) {
 		handleTimeout(asyncResponse, 20, "Getting customer operation time out!");
 		List<CustomerModel> matched;
 		GenericEntity<List<CustomerModel>> entity;
@@ -129,7 +140,7 @@ public class CustomerResource {
 	@Path("/{customerId}")
 	@ManagedAsync
 	public void updateCustomer(@Suspended final AsyncResponse asyncResponse,
-			@PathParam("customerId") long customerId,
+			@PathParam("customerId") final long customerId,
 			final CustomerModel customer) {
 		customer.setId(customerId);
 
@@ -153,9 +164,10 @@ public class CustomerResource {
 	@Path("/{customerId}")
 	@ManagedAsync
 	public void deleteCustomer(@Suspended final AsyncResponse asyncResponse,
-			@PathParam("customerId") final long customerId) {
+			@PathParam("customerId") long customerId) {
 		customerService.deleteCustomer(customerId);
-
+		asyncResponse.resume(Entity.entity(customerId,
+				MediaType.APPLICATION_JSON));
 	}
 
 	/**
@@ -168,13 +180,15 @@ public class CustomerResource {
 	 * @param message
 	 *            Massage in case of time out.
 	 */
-	public void handleTimeout(AsyncResponse asyncResponse, int timeoutDuration,
-			final String message) {
+	public void handleTimeout(final AsyncResponse asyncResponse,
+			final int timeoutDuration, final String message) {
 		asyncResponse.setTimeoutHandler(new TimeoutHandler() {
-
+			/**
+			 * implement Timeouthandler
+			 */
 			@Override
 			public void handleTimeout(final AsyncResponse asyncResponse) {
-				Response response = Response
+				final Response response = Response
 						.status(Response.Status.SERVICE_UNAVAILABLE)
 						.entity(message).build();
 				asyncResponse.resume(response);

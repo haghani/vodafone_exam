@@ -15,21 +15,21 @@ public interface CustomerService {
 	 * 
 	 * @param customer
 	 */
-	public void creatrCustomer(final CustomerModel customer);
+	public long createCustomer(CustomerModel customer);
 
 	/**
 	 * update
 	 * 
 	 * @param customer
 	 */
-	public void updateCustomer(final CustomerModel customer);
+	public boolean updateCustomer(final CustomerModel customer);
 
 	/**
 	 * delete
 	 * 
 	 * @param customer
 	 */
-	public void deleteCustomer(final long customerId);
+	public boolean deleteCustomer(final long customerId);
 
 	/**
 	 * read

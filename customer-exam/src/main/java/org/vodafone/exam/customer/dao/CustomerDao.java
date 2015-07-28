@@ -5,11 +5,11 @@ import java.util.List;
 import org.vodafone.exam.customer.model.CustomerModel;
 
 public interface CustomerDao {
-	public void creatrCustomer(CustomerModel customer);
+	public long createCustomer(CustomerModel customer);
 	
-	public void updateCustomer(CustomerModel customer);
+	public boolean updateCustomer(CustomerModel customer);
 	 
-	void deleteCustomer(final long customerId);
+	public boolean deleteCustomer(final long customerId);
 	
 	public List<CustomerModel> findAllCustomer();
 }
