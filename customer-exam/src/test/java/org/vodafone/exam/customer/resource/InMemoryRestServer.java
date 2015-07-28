@@ -22,8 +22,6 @@ import org.jboss.resteasy.plugins.server.tjws.TJWSEmbeddedJaxrsServer;
  * <li>srv.close() to stop</li>
  * </ul>
  *
- * @author <a href="mailto:mpaluch@paluch.biz">Mark Paluch</a>
- * @since 03.02.15 08:42
  */
 public class InMemoryRestServer implements AutoCloseable {
 
